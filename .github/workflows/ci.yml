@@ -1,0 +1,21 @@
+name: CI
+on: {push:{branches:[main]},pull_request:{branches:[main]}}
+permissions: {contents: read}
+concurrency: {group: ${{github.workflow}}-${{github.ref}},cancel-in-progress: true}
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@c85c95e3d7251135bc2107aae7ea3d7304e93049 # v4.2.2
+    - uses: actions/setup-node@9035cd6317708e0942fae55cb468a77f90e7de47 # v4.1.0
+      with: {node-version: 20,cache: npm}
+    - run: npm ci
+    - run: npm run lint
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@c85c95e3d7251135bc2107aae7ea3d7304e93049 # v4.2.2
+    - uses: actions/setup-node@9035cd6317708e0942fae55cb468a77f90e7de47 # v4.1.0
+      with: {node-version: 20,cache: npm}
+    - run: npm ci
+    - run: npm run build
